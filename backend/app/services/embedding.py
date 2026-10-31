@@ -8,23 +8,24 @@ from __future__ import annotations
 import logging
 from typing import List, Optional
 
-from sentence_transformers import SentenceTransformer
+from typing import Any, List, Optional
 
 from backend.app.core.config import settings
 
 logger = logging.getLogger("echoes.embedding")
 
-_model_instance: Optional[SentenceTransformer] = None
+_model_instance: Optional[Any] = None
 
 
-def get_embedding_model() -> SentenceTransformer:
+def get_embedding_model() -> Any:
     """
     Get or initialize the shared SentenceTransformer singleton.
-    Loaded lazily on first call to optimize startup time.
+    Loaded lazily on first call to optimize startup time and reduce memory footprint.
     """
     global _model_instance
     if _model_instance is None:
-        logger.info("[EMBEDDING] Loading model '%s'...", settings.EMBEDDING_MODEL)
+        logger.info("[EMBEDDING] Lazy-loading model '%s' on first use...", settings.EMBEDDING_MODEL)
+        from sentence_transformers import SentenceTransformer
         _model_instance = SentenceTransformer(settings.EMBEDDING_MODEL)
         logger.info("[EMBEDDING] Model '%s' loaded successfully.", settings.EMBEDDING_MODEL)
     return _model_instance
@@ -35,7 +36,11 @@ class EmbeddingService:
 
     def __init__(self, model_name: Optional[str] = None):
         self.model_name = model_name or settings.EMBEDDING_MODEL
-        self._model = get_embedding_model()
+        # Do NOT eagerly instantiate model in __init__ to keep memory low
+
+    @property
+    def model(self) -> Any:
+        return get_embedding_model()
 
     def embed_texts(self, texts: List[str], batch_size: Optional[int] = None) -> List[List[float]]:
         """
@@ -52,7 +57,7 @@ class EmbeddingService:
             return []
 
         bs = batch_size or settings.EMBEDDING_BATCH_SIZE
-        embeddings = self._model.encode(
+        embeddings = self.model.encode(
             texts,
             batch_size=bs,
             show_progress_bar=False,
