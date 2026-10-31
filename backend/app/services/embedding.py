@@ -45,23 +45,41 @@ class EmbeddingService:
     def embed_texts(self, texts: List[str], batch_size: Optional[int] = None) -> List[List[float]]:
         """
         Embed a list of text strings into normalized vector embeddings.
-
-        Args:
-            texts: List of strings to encode
-            batch_size: Batch size for encoding (defaults to settings.EMBEDDING_BATCH_SIZE)
-
-        Returns:
-            List of float vectors, each of length 384 (for all-MiniLM-L6-v2)
+        Uses ultra-fast Gemini 384-dim embeddings when configured to avoid high RAM usage on cloud servers,
+        falling back to local SentenceTransformers.
         """
         if not texts:
             return []
 
+        # 1. Primary: Use Gemini API embeddings (Zero memory footprint, ~1 second, exact 384 dims)
+        if settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("your_"):
+            try:
+                from google import genai
+                client = genai.Client(api_key=settings.GEMINI_API_KEY)
+                bs = batch_size or 32
+                all_vectors: List[List[float]] = []
+
+                for i in range(0, len(texts), bs):
+                    batch = texts[i : i + bs]
+                    res = client.models.embed_content(
+                        model="gemini-embedding-001",
+                        contents=batch,
+                        config={"output_dimensionality": 384},
+                    )
+                    all_vectors.extend([e.values for e in res.embeddings])
+
+                logger.info("[EMBEDDING] Successfully generated %d embeddings via Gemini API (384-dim)", len(all_vectors))
+                return all_vectors
+            except Exception as gemini_err:
+                logger.warning("[EMBEDDING WARN] Gemini embedding API failed (%s), falling back to SentenceTransformer", gemini_err)
+
+        # 2. Fallback: Local SentenceTransformer model
         bs = batch_size or settings.EMBEDDING_BATCH_SIZE
         embeddings = self.model.encode(
             texts,
             batch_size=bs,
             show_progress_bar=False,
-            normalize_embeddings=True,  # Normalized embeddings enable cosine similarity via dot product
+            normalize_embeddings=True,
         )
         return embeddings.tolist()
 

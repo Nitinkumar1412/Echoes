@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     # ── Application ──────────────────────────────────────────────────────────
     APP_NAME: str = "Echoes Search"
     APP_VERSION: str = "0.1.0"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     # ── MongoDB Atlas ─────────────────────────────────────────────────────────
     MONGODB_URI: str = "mongodb+srv://user_nitin:c6zfo31m5JCaiXaW@echoescluster.bmdvsoz.mongodb.net/echoes_db?retryWrites=true&w=majority"
