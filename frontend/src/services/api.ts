@@ -13,7 +13,10 @@ import type {
   UserProfileResponse,
 } from '../types';
 
-const rawBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const rawBase =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.API_BASE_URL ||
+  'https://echoes-backend-gwpc.onrender.com';
 const API_BASE = rawBase.replace(/\/+$/, '');
 export const DEFAULT_WORKSPACE_ID = 'ws_default';
 
