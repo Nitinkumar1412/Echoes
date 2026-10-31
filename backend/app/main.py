@@ -62,9 +62,13 @@ app = FastAPI(
 )
 
 # CORS middleware
+# When wildcard '*' is configured, use allow_origin_regex so browsers don't block
+# requests that include authorization tokens / credentials
+allow_all = "*" in settings.cors_origins_list or not settings.cors_origins_list
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=[] if allow_all else settings.cors_origins_list,
+    allow_origin_regex=r"^https?://.*" if allow_all else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

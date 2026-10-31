@@ -13,12 +13,13 @@ import type {
   UserProfileResponse,
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const rawBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = rawBase.replace(/\/+$/, '');
 export const DEFAULT_WORKSPACE_ID = 'ws_default';
 
 const client = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  timeout: 60000,
 });
 
 // Attach Bearer token from localStorage to all outgoing requests
