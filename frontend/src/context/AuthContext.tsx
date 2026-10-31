@@ -67,38 +67,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // 1. Authenticate with Firebase Email/Password
-      const fbUser = await signInWithEmailPassword(email, password);
-
-      // 2. Synchronize user and personal workspace in MongoDB Atlas
-      const res = await api.loginWithGoogle({
-        credential: fbUser.idToken,
-        email: fbUser.email,
-        displayName: fbUser.displayName,
-        avatarUrl: fbUser.photoURL,
-      });
+      let res: any;
+      try {
+        // 1. Try native FastAPI backend login first
+        res = await api.login(email, password);
+      } catch (nativeErr: any) {
+        // 2. Fallback: try Firebase email/password
+        try {
+          const fbUser = await signInWithEmailPassword(email, password);
+          res = await api.loginWithGoogle({
+            credential: fbUser.idToken,
+            email: fbUser.email,
+            displayName: fbUser.displayName,
+            avatarUrl: fbUser.photoURL,
+          });
+        } catch (fbErr: any) {
+          const msg = nativeErr?.response?.data?.detail || nativeErr?.message || formatFirebaseError(fbErr);
+          throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+        }
+      }
 
       localStorage.setItem('echoes_token', res.access_token);
       localStorage.setItem('echoes_workspace_id', res.workspace_id);
       setToken(res.access_token);
       setUser(res.user);
       setWorkspaceId(res.workspace_id);
-    } catch (err: any) {
-      if (err.code) {
-        throw new Error(formatFirebaseError(err));
-      }
-      // Fallback: try native backend login if not found in Firebase
-      try {
-        const res = await api.login(email, password);
-        localStorage.setItem('echoes_token', res.access_token);
-        localStorage.setItem('echoes_workspace_id', res.workspace_id);
-        setToken(res.access_token);
-        setUser(res.user);
-        setWorkspaceId(res.workspace_id);
-      } catch {
-        const msg = err.response?.data?.detail || err.message || 'Login failed.';
-        throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
-      }
     } finally {
       setIsLoading(false);
     }
@@ -107,28 +100,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (email: string, password: string, displayName: string) => {
     setIsLoading(true);
     try {
-      // 1. Create account with Firebase Email/Password
-      const fbUser = await signUpWithEmailPassword(email, password, displayName);
-
-      // 2. Provision user vault and personal workspace in MongoDB Atlas
-      const res = await api.loginWithGoogle({
-        credential: fbUser.idToken,
-        email: fbUser.email,
-        displayName: fbUser.displayName,
-        avatarUrl: fbUser.photoURL,
-      });
+      let res: any;
+      try {
+        // 1. Try native FastAPI backend registration first
+        res = await api.register(email, password, displayName);
+      } catch (nativeErr: any) {
+        // 2. Fallback: try Firebase
+        try {
+          const fbUser = await signUpWithEmailPassword(email, password, displayName);
+          res = await api.loginWithGoogle({
+            credential: fbUser.idToken,
+            email: fbUser.email,
+            displayName: fbUser.displayName,
+            avatarUrl: fbUser.photoURL,
+          });
+        } catch (fbErr: any) {
+          const msg = nativeErr?.response?.data?.detail || nativeErr?.message || formatFirebaseError(fbErr);
+          throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+        }
+      }
 
       localStorage.setItem('echoes_token', res.access_token);
       localStorage.setItem('echoes_workspace_id', res.workspace_id);
       setToken(res.access_token);
       setUser(res.user);
       setWorkspaceId(res.workspace_id);
-    } catch (err: any) {
-      if (err.code) {
-        throw new Error(formatFirebaseError(err));
-      }
-      const msg = err.response?.data?.detail || err.message || 'Registration failed.';
-      throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
     } finally {
       setIsLoading(false);
     }
