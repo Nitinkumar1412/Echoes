@@ -132,7 +132,7 @@ flowchart TD
 
 ---
 
-## 💻 Tech Stack
+## 💻Tech Stack
 
 | Domain | Technology | Purpose |
 |---|---|---|
