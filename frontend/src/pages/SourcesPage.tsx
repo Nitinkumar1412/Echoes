@@ -59,7 +59,10 @@ export const SourcesPage: React.FC = () => {
       );
       await fetchDocs();
     } catch (err: any) {
-      setUploadMessage(`Upload error: ${err.message || 'Failed to process document'}`);
+      console.error('[ECHOES] Document upload error:', err?.response?.data || err);
+      const detail = err.response?.data?.detail || err.message || 'Failed to process document';
+      const msg = typeof detail === 'string' ? detail : JSON.stringify(detail);
+      setUploadMessage(`Upload error: ${msg}`);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';

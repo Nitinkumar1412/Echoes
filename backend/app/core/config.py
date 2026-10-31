@@ -22,19 +22,19 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     # ── MongoDB Atlas ─────────────────────────────────────────────────────────
-    MONGODB_URI: str = ""
+    MONGODB_URI: str = "mongodb+srv://user_nitin:c6zfo31m5JCaiXaW@echoescluster.bmdvsoz.mongodb.net/echoes_db?retryWrites=true&w=majority"
     MONGODB_DATABASE: str = "echoes_db"
 
     # ── Google Gemini ─────────────────────────────────────────────────────────
-    GEMINI_API_KEY: str = ""
+    GEMINI_API_KEY: str = "AQ.Ab8RN6LV6KyKXxstMN9YmPvAWmBYLfeoxIr8A0sQOEcKZfo7eQ"
     MODEL_NAME: str = "gemini-2.5-flash"
 
     # ── Storage Paths & Supabase Cloud Storage ───────────────────────────────
     UPLOAD_DIR: str = "./storage/documents"
     CHROMA_PATH: str = "./storage/vectors"
-    SUPABASE_URL: str = ""
-    SUPABASE_KEY: str = ""
-    SUPABASE_BUCKET: str = "documents"
+    SUPABASE_URL: str = "https://ypstgmatzzsljykhaklw.supabase.co"
+    SUPABASE_KEY: str = "sb_secret_cB4xxqiI5WUvMcLJty5Rpw_zHifzhB-"
+    SUPABASE_BUCKET: str = "Echoes_documents"
     SUPABASE_PUBLIC_URL_EXPIRY: int = 3600
 
     # ── Document Processing ───────────────────────────────────────────────────
