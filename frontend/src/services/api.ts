@@ -100,9 +100,12 @@ export const echoesApi = {
   // GET /health
   async checkHealth(): Promise<{ status: string; database: string }> {
     try {
+      console.log('[ECHOES] Checking backend health at:', `${API_BASE}/health`);
       const res = await client.get('/health');
+      console.log('[ECHOES] Health response:', res.data);
       return res.data;
-    } catch {
+    } catch (err: any) {
+      console.error('[ECHOES] Health check failed at:', `${API_BASE}/health`, err?.message || err);
       return { status: 'offline', database: 'disconnected' };
     }
   },
