@@ -100,14 +100,24 @@ export const echoesApi = {
   // GET /health
   async checkHealth(): Promise<{ status: string; database: string }> {
     try {
-      console.log('[ECHOES] Checking backend health at:', `${API_BASE}/health`);
       const res = await client.get('/health');
-      console.log('[ECHOES] Health response:', res.data);
-      return res.data;
-    } catch (err: any) {
-      console.error('[ECHOES] Health check failed at:', `${API_BASE}/health`, err?.message || err);
-      return { status: 'offline', database: 'disconnected' };
-    }
+      if (res.data?.status === 'ok') {
+        return res.data;
+      }
+    } catch {}
+
+    // Fallback: direct fetch to production Render endpoint
+    try {
+      const direct = await fetch('https://echoes-backend-gwpc.onrender.com/health', {
+        headers: { Accept: 'application/json' },
+      });
+      if (direct.ok) {
+        const data = await direct.json();
+        return data;
+      }
+    } catch {}
+
+    return { status: 'offline', database: 'disconnected' };
   },
 
   // ── 2. Auth: Register ─────────────────────────────────────────────────────

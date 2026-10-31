@@ -68,12 +68,20 @@ export const SettingsPage: React.FC = () => {
             <div>
               <span className="text-xs text-[#9292A5] block">FastAPI Backend</span>
               <span className="text-sm font-bold text-[#F5F3FF]">
-                {health.status === 'ok' ? 'Online (HTTP 200)' : 'Offline / Mock Mode'}
+                {checking || health.status === 'checking'
+                  ? 'Checking connection...'
+                  : health.status === 'ok'
+                  ? 'Online (HTTP 200)'
+                  : 'Offline / Mock Mode'}
               </span>
             </div>
             <span
               className={`h-3 w-3 rounded-full ${
-                health.status === 'ok' ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-amber-400'
+                checking || health.status === 'checking'
+                  ? 'bg-amber-400 animate-pulse'
+                  : health.status === 'ok'
+                  ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]'
+                  : 'bg-amber-400'
               }`}
             />
           </div>
@@ -82,12 +90,20 @@ export const SettingsPage: React.FC = () => {
             <div>
               <span className="text-xs text-[#9292A5] block">MongoDB Atlas</span>
               <span className="text-sm font-bold text-[#F5F3FF]">
-                {health.database === 'connected' ? 'Connected (echoes_db)' : 'Atlas Disconnected'}
+                {checking || health.database === 'checking'
+                  ? 'Checking database...'
+                  : health.database === 'connected'
+                  ? 'Connected (echoes_db)'
+                  : 'Atlas Disconnected'}
               </span>
             </div>
             <span
               className={`h-3 w-3 rounded-full ${
-                health.database === 'connected' ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]' : 'bg-rose-400'
+                checking || health.database === 'checking'
+                  ? 'bg-amber-400 animate-pulse'
+                  : health.database === 'connected'
+                  ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]'
+                  : 'bg-rose-400'
               }`}
             />
           </div>
