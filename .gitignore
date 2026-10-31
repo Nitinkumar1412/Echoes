@@ -1,0 +1,104 @@
+# ==============================================================================
+# Echoes Search - Git Ignore
+# ==============================================================================
+
+# ── Secrets & Environment Variables ──────────────────────────────────────────
+.env
+.env.*
+*.env
+frontend/.env
+frontend/.env.*
+# Keep example env files tracked
+!.env.example
+!frontend/.env.example
+
+# ── Python & Virtual Environments ────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ── Testing & Quality ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.mypy_cache/
+.ruff_cache/
+
+# ── Frontend & Node.js ───────────────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ── Storage & Local Database ─────────────────────────────────────────────────
+# Ignore document uploads and Chroma vector DB data, but keep folder structure
+storage/documents/*
+!storage/documents/.gitkeep
+storage/vectors/*
+!storage/vectors/.gitkeep
+
+# SQLite files (ChromaDB local state, etc.)
+*.sqlite3
+*.sqlite3-journal
+*.db
+*.db-journal
+
+# ── Logs & Temporary Files ───────────────────────────────────────────────────
+*.log
+logs/
+temp/
+tmp/
+
+# ── IDEs & Operating System ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/

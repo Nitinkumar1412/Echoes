@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #09090F;
+    --bg-sidebar: #101019;
+    --bg-card: #151521;
+    --bg-card-hover: #1A1A2B;
+    --bg-surface: #1E1E30;
+    --border-subtle: #232336;
+    --border-highlight: #3D3D5C;
+    --accent-primary: #8B5CF6;
+    --accent-secondary: #6366F1;
+    --accent-glow: rgba(139, 92, 246, 0.25);
+    --text-main: #F5F3FF;
+    --text-muted: #9292A5;
+    --text-dim: #64647A;
+  }
+
+  * {
+    box-sizing: border-box;
+    border-color: var(--border-subtle);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Custom sleek scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0D0D15;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #252538;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3B3B54;
+  }
+}
+
+/* Glassmorphism & glows */
+.glass-panel {
+  background: rgba(21, 21, 33, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glow-violet {
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+}
+
+.glow-violet-lg {
+  box-shadow: 0 0 50px rgba(139, 92, 246, 0.3);
+}
+
+.glow-blue {
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+}
+
+/* React Flow customizations for sleek dark theme */
+.react-flow__background {
+  background-color: #09090F !important;
+}
+.react-flow__controls {
+  background: #151521 !important;
+  border: 1px solid #232336 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+.react-flow__controls button {
+  background: #151521 !important;
+  border-bottom: 1px solid #232336 !important;
+  color: #A78BFA !important;
+  fill: #A78BFA !important;
+}
+.react-flow__controls button:hover {
+  background: #1E1E30 !important;
+}
+.react-flow__minimap {
+  background-color: #101019 !important;
+  border: 1px solid #232336 !important;
+  border-radius: 10px !important;
+}

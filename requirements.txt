@@ -1,0 +1,45 @@
+# Backend API
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Configuration and validation
+pydantic
+pydantic-settings
+python-dotenv
+
+# MongoDB
+pymongo[srv]>=4.13
+motor>=3.7          # Async driver for FastAPI
+certifi             # TLS certificate bundle (Windows SSL fix)
+
+# Document processing
+PyMuPDF
+python-docx
+Pillow
+pytesseract
+
+# AI and embeddings
+torch
+sentence-transformers
+
+# Vector database
+chromadb
+
+# Hybrid retrieval
+rank-bm25
+
+# Knowledge graph
+networkx
+
+# Temporal processing and entity matching
+dateparser
+rapidfuzz
+
+# LLM
+google-genai
+
+# Testing
+pytest
+httpx
+supabase
