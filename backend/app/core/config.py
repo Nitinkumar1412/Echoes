@@ -75,7 +75,7 @@ class Settings(BaseSettings):
         return p if p.is_absolute() else _ROOT / p
 
     model_config = {
-        "env_file": str(_ROOT / ".env"),
+        "env_file": (str(_ROOT / ".env"), str(_ROOT / "backend" / ".env")),
         "env_file_encoding": "utf-8",
         "extra": "ignore",
     }
